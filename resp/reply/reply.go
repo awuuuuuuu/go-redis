@@ -11,6 +11,29 @@ var (
 	CRLF               = "\r\n"
 )
 
+/*
+	RESP Redis Serialization Protocol
+	五种回复
+	--正常回复
+		以 "+" 开头，以 "\r\n" 结尾
+		+OK\r\n
+	--错误回复
+		以 "-" 开头，以 "\r\n" 结尾
+		-Error message\r\n
+	--整数回复
+		以 ":" 开头，以 "\r\n" 结尾
+		:123456\r\n
+	--多行字符串
+		以 "$" 开头，后面跟实际发送字节数，以 "\r\n" 结尾
+		$3\r\nawu\r\n
+		$0\r\n\r\n 表示一个长度为 0 的字符串
+		$-1\r\n 表示空值（Null），即“键不存在”或“无结果”
+		$7\r\na\r\nwu\r\n
+	--数组
+		以 "*" 开头，后面跟成员个数
+		// *3\r\n$3\r\nSET\r\n$3\r\nkey\r\n$5\r\nvalue\r\n
+*/
+
 // BulkReply 字符串
 type BulkReply struct {
 	Arg []byte // "awu" "$3\r\nawu\r\n"
@@ -85,7 +108,7 @@ func (s *StandardErrReply) ToBytes() []byte {
 	return []byte("-" + s.Status + CRLF)
 }
 
-func MakeStandardErrReply(status string) *StandardErrReply {
+func MakeErrReply(status string) *StandardErrReply {
 	return &StandardErrReply{status}
 }
 
