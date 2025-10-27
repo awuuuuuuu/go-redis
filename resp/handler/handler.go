@@ -27,8 +27,7 @@ type RespHandler struct {
 }
 
 func MakeHandler() *RespHandler {
-	db := database.NewEchoDatabase()
-	// TODO： 实现DataBase
+	db := database.NewDatabase()
 	return &RespHandler{
 		db: db,
 	}
@@ -67,10 +66,12 @@ func (r *RespHandler) Handle(ctx context.Context, conn net.Conn) {
 			}
 			continue
 		}
-		//exec
+
 		if payload.Data == nil {
 			continue
 		}
+
+		//exec
 		bulkReply, ok := payload.Data.(*reply.MultiBulkReply)
 		if !ok {
 			logger.Info("request data type is not MultiBulkReply")
@@ -78,9 +79,9 @@ func (r *RespHandler) Handle(ctx context.Context, conn net.Conn) {
 		}
 		result := r.db.Exec(client, bulkReply.Args)
 		if result == nil {
-			_ = client.Write(result.ToBytes())
-		} else {
 			_ = client.Write(unknownErrReplyBytes)
+		} else {
+			_ = client.Write(result.ToBytes())
 		}
 	}
 }

@@ -18,7 +18,7 @@ type ServerProperties struct {
 	AppendFilename string `cfg:"appendFilename"`
 	MaxClients     int    `cfg:"maxclients"`
 	RequirePass    string `cfg:"requirepass"`
-	Databases      int    `cfg:"databases"`
+	Databases      int    `cfg:"databases" default:"16"`
 
 	Peers []string `cfg:"peers"`
 	Self  string   `cfg:"self"`
