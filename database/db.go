@@ -5,12 +5,14 @@ import (
 	"go-redis/interface/database"
 	"go-redis/interface/resp"
 	"go-redis/resp/reply"
+	"reflect"
 	"strings"
 )
 
 type DB struct {
-	index int
-	data  dict.Dict
+	index  int
+	data   dict.Dict
+	AddAof func(cmdLine CmdLine)
 }
 
 type ExecFunc func(db *DB, args [][]byte) resp.Reply
@@ -19,7 +21,8 @@ type CmdLine [][]byte
 
 func makeDB() *DB {
 	return &DB{
-		data: dict.MakeSyncDict(),
+		data:   dict.MakeSyncDict(),
+		AddAof: func(cmdLine CmdLine) {},
 	}
 }
 
@@ -50,6 +53,9 @@ func validateArity(arity int, cmdArgs [][]byte) bool {
 
 func (db *DB) GetEntity(key string) (*database.DataEntity, bool) {
 	value, exists := db.data.Get(key)
+	if !exists || reflect.TypeOf(value) != reflect.TypeOf(&database.DataEntity{}) {
+		return nil, exists
+	}
 	return value.(*database.DataEntity), exists
 }
 

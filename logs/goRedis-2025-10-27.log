@@ -246,3 +246,9 @@
 [INFO][parser.go:51] 2025/10/27 21:51:08 Read line: 
 [INFO][handler.go:55] 2025/10/27 21:51:08 connection closed: 127.0.0.1:55512
 [INFO][handler.go:90] 2025/10/27 21:51:08 close resp handler
+[INFO][server.go:34] 2025/10/27 21:51:12 start listen at  [::]:6379
+[INFO][server.go:60] 2025/10/27 21:51:13 accepted link  127.0.0.1:56099
+[INFO][parser.go:51] 2025/10/27 21:51:23 Read line: 
+[INFO][handler.go:55] 2025/10/27 21:51:23 connection closed: 127.0.0.1:56099
+[INFO][server.go:43] 2025/10/27 21:53:29 shutting down
+[INFO][handler.go:90] 2025/10/27 21:53:29 close resp handler

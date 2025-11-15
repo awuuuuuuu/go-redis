@@ -1,6 +1,7 @@
 package database
 
 import (
+	"go-redis/aof"
 	"go-redis/config"
 	"go-redis/interface/database"
 	"go-redis/interface/resp"
@@ -11,15 +12,30 @@ import (
 )
 
 type Database struct {
-	dbSet []*DB
+	dbSet      []*DB
+	aofHandler *aof.AofHandler
 }
 
 func NewDatabase() *Database {
-	database := &Database{make([]*DB, config.Properties.Databases)}
+	database := &Database{}
+	database.dbSet = make([]*DB, config.Properties.Databases)
 	for i := range database.dbSet {
 		db := makeDB()
 		db.index = i
 		database.dbSet[i] = db
+	}
+	if config.Properties.AppendOnly {
+		aofHandler, err := aof.NewAofHandler(database)
+		if err != nil {
+			panic(err)
+		}
+		database.aofHandler = aofHandler
+		for _, db := range database.dbSet {
+			sdb := db
+			sdb.AddAof = func(cmdLine CmdLine) {
+				database.aofHandler.AddAof(sdb.index, cmdLine)
+			}
+		}
 	}
 	return database
 }
