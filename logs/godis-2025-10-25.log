@@ -1,9 +1,0 @@
-[INFO][server.go:34] 2025/10/25 19:29:56 start listen at  [::]:6379
-[INFO][server.go:60] 2025/10/25 19:32:03 accepted link  127.0.0.1:58639
-[INFO][echo.go:55] 2025/10/25 19:32:09 Message received:  1
-
-[INFO][echo.go:55] 2025/10/25 19:32:45 Message received:  I lonve[C[C[C[C [C[D[DqqqqI love promsing
-
-[INFO][echo.go:55] 2025/10/25 19:40:44 Message received:  I love Ð¡Äà°Í
-
-[INFO][echo.go:48] 2025/10/25 20:54:00 Connection closed.

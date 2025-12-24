@@ -11,13 +11,13 @@ import (
 	"strings"
 )
 
-type Database struct {
+type StandaloneDatabase struct {
 	dbSet      []*DB
 	aofHandler *aof.AofHandler
 }
 
-func NewDatabase() *Database {
-	database := &Database{}
+func NewStandaloneDatabase() *StandaloneDatabase {
+	database := &StandaloneDatabase{}
 	database.dbSet = make([]*DB, config.Properties.Databases)
 	for i := range database.dbSet {
 		db := makeDB()
@@ -40,7 +40,7 @@ func NewDatabase() *Database {
 	return database
 }
 
-func (d *Database) Exec(client resp.Connection, args database.CmdLine) resp.Reply {
+func (d *StandaloneDatabase) Exec(client resp.Connection, args database.CmdLine) resp.Reply {
 	defer func() {
 		if err := recover(); err != nil {
 			logger.Error(err)
@@ -63,16 +63,16 @@ func (d *Database) Exec(client resp.Connection, args database.CmdLine) resp.Repl
 	return db.Exec(client, args)
 }
 
-func (d *Database) Close() {
+func (d *StandaloneDatabase) Close() {
 
 }
 
-func (d *Database) AfterClientClose(client resp.Connection) {
+func (d *StandaloneDatabase) AfterClientClose(client resp.Connection) {
 
 }
 
 // select 4
-func execSelect(conn resp.Connection, database *Database, args [][]byte) resp.Reply {
+func execSelect(conn resp.Connection, database *StandaloneDatabase, args [][]byte) resp.Reply {
 	dbIndex, err := strconv.Atoi(string(args[0]))
 	if err != nil {
 		return reply.MakeErrReply("ERR invalid DB index")
